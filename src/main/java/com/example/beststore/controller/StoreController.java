@@ -114,42 +114,8 @@ public class StoreController {
 
         return "redirect:/products";
     }
-//    @PostMapping("/add")
-//    public ResponseEntity<String> addProducts(
-//            @RequestParam("name") String name,
-//            @RequestParam("brand") String brand,
-//            @RequestParam("category") String category,
-//            @RequestParam("price") double price,
-//            @RequestParam("description") String description,
-//            @RequestParam("file") MultipartFile file
-//    ){
-//
-//        try {
-//            // Save image to public/images
-//            String fileName = Path.of(file.getOriginalFilename()).getFileName().toString();
-//            Path uploadPath = Paths.get("public/images", fileName);
-//            Files.createDirectories(uploadPath.getParent());
-//            Files.copy(file.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
-//
-//            // Save product to DB
-//            Product product = new Product();
-//            product.setName(name);
-//            product.setBrand(brand);
-//            product.setCategory(category);
-//            product.setPrice(price);
-//            product.setDescription(description);
-//            product.setImageFileName(fileName);
-//
-//            productService.addProduct(product);
-//
-//            return ResponseEntity.ok("Product saved successfully!");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save product.");
-//        }
-//
-//    }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping("/update/{id}")
     public String ShowUpdateForm(@PathVariable Long id, Model model){
         Product product = productService.getProductById(id);
@@ -158,22 +124,19 @@ public class StoreController {
         model.addAttribute("categories", allCategories);
         return "update-product";
     }
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping("/update/{id}")
-    public ResponseEntity<String> UpdateProduct(
+    public String UpdateProduct(
             @RequestParam("name") String name,
             @RequestParam("brand") String brand,
             @RequestParam("category") String category,
             @RequestParam("price") double price,
             @RequestParam("description") String description,
             @RequestParam("file") MultipartFile file,
-            @PathVariable Long id
+            @PathVariable Long id,
+            Model model
     ){
         try {
-            // Save image to public/images
-            String fileName = Path.of(file.getOriginalFilename()).getFileName().toString();
-            Path uploadPath = Paths.get("public/images", fileName);
-            Files.createDirectories(uploadPath.getParent());
-            Files.copy(file.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
 
             // Save product to DB
             Product product = productService.getProductById(id);
@@ -182,17 +145,31 @@ public class StoreController {
             product.setCategory(category);
             product.setPrice(price);
             product.setDescription(description);
-            product.setImageFileName(fileName);
 
+            if(!file.isEmpty()){
+                // Save image to public/images
+                String fileName = Path.of(file.getOriginalFilename()).getFileName().toString();
+                Date createdAt = new Date();
+                String fileNameWithTime = createdAt.getTime() + "_" + fileName;
+                Path uploadPath = Paths.get("public/images", fileNameWithTime);
+                Files.createDirectories(uploadPath.getParent());
+                Files.copy(file.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
+
+
+
+                product.setImageFileName(fileNameWithTime);
+            }
             productService.addProduct(product);
 
-            return ResponseEntity.ok("Product saved successfully!");
+            return "redirect:/products";
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save product.");
+            model.addAttribute("error", "File upload failed: " + e.getMessage());
+            return "redirect:/products/update/" + id;
         }
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable Long id){
         Product product = productService.getProductById(id);
@@ -200,56 +177,6 @@ public class StoreController {
 
         return "redirect:/products";
     }
-
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-//    @GetMapping("/category")
-//    public String addCategoryForm(Model model) {
-//        model.addAttribute("categoryDto", new CategoryModelDto());
-//        List<CategoryModel> categories = productService.getAllCategories();
-//        model.addAttribute("categories", categories);
-//        return "category";
-//    }
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-//    @PostMapping("/category/add")
-//    public String addCategory(
-//            @Valid @ModelAttribute("categoryDto") CategoryModelDto categoryDto,
-//            BindingResult result,
-//            Model model
-//    ) {
-//        if (result.hasErrors()) {
-//            return "redirect:/products/category/add";
-//        }
-//
-//        CategoryModel category = new CategoryModel();
-//        category.setName(categoryDto.getName());
-//
-//        productService.saveOrUpdateCategory(category);
-//
-//        return "redirect:/products/category";
-//    }
-//
-//    @GetMapping("/category/edit/{id}")
-//    public String showEditCategoryForm(@PathVariable Long id, Model model) {
-//        CategoryModel category = productService.getCategoriesById(id);
-//        CategoryModelDto categoryModelDto = new CategoryModelDto();
-//
-//        categoryModelDto.setName(category.getName());
-//
-//        model.addAttribute("categoryDto", categoryModelDto);
-//        model.addAttribute("update", true);                  // edit mode
-//        model.addAttribute("categories", productService.getAllCategories());
-//        return "category";                                  // same Thymeleaf view                         // Thymeleaf template: category.html (or category/index.html)
-//    }
-//
-//    @PostMapping("/category/edit/{id}")
-//    public String saveCategory(
-//            @PathVariable Long id,
-//            @ModelAttribute("category") CategoryModelDto categoryModelDto, Model model) {
-//        CategoryModel existingCat = productService.getCategoriesById(id);
-//        existingCat.setName(categoryModelDto.getName());
-//        productService.saveOrUpdateCategory(existingCat);
-//        return "redirect:/products/category";
-//    }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/category")

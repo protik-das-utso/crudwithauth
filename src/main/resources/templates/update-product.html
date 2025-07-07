@@ -9,6 +9,9 @@
 <body>
 <div th:insert="~{fragment::header}"></div>
 <div class="container mt-5">
+    <div th:if="${message}" class="alert alert-success mt-3" role="alert" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger mt-3" role="alert" th:text="${error}"></div>
+
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
             <h3 class="mb-0">Update Products</h3>
@@ -17,12 +20,12 @@
             <form th:action="@{/products/update/{id}(id=${product.getId()})}" th:object="${product}" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label">Name</label>
-                    <input type="text" th:field="*{name}" name="name" class="form-control" required>
+                    <input type="text" th:field="*{name}" name="name" class="form-control">
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Brand	</label>
-                    <input type="text" th:field="*{brand}" name="brand" class="form-control" required>
+                    <input type="text" th:field="*{brand}" name="brand" class="form-control">
                 </div>
 
                 <div class="col-sm-8">
@@ -50,7 +53,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">Upload New Image</label>
-                    <input type="file" name="file" class="form-control" required>
+                    <input type="file" name="file" class="form-control">
                 </div>
 
                 <button type="submit" class="btn btn-success">Update Product</button>

@@ -13,31 +13,9 @@
         <div class="card shadow-sm d-flex flex-row justify-content-between p-3 gap-3">
             <div class="flex-fill" sec:authorize="hasRole('ROLE_ADMIN')" style="min-width: 350px;">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">Add Category</h3>
+                    <h3 class="mb-0" th:text="${update} ? 'Update Category' : 'Add Category'"></h3>
                 </div>
                 <div class="card-body">
-<!--                    <form th:action="@{/products/category/add}" th:object="${categoryDto}" method="post" enctype="multipart/form-data">-->
-<!--                        <div class="mb-3">-->
-<!--                            <label class="form-label">Category Name</label>-->
-<!--                            <div class="col-sm-12">-->
-<!--                                <input type="text" th:field="*{name}" class="form-control">-->
-<!--                                <p th:if="${#fields.hasErrors('name')}" th:errorclass="text-danger" th:errors="*{name}"></p>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <button type="submit" class="btn btn-success">Add Category</button>-->
-<!--                        <a th:href="@{/products}" class="btn btn-secondary ms-2">Cancel</a>-->
-<!--                    </form>-->
-<!--                    <form th:action="@{/products/category/edit/{id}(id=${categoryDto.id})}" th:object="${categoryDto}" method="post">-->
-<!--                        <div>-->
-<!--                            <label>Name:</label>-->
-<!--                            <input type="text" th:field="*{name}" placeholder="Category name" />-->
-<!--                        </div>-->
-
-<!--                        <div>-->
-<!--                            <button type="submit" th:text="${update} ? 'Update Category' : 'Add Category'"></button>-->
-<!--                            <a th:if="${update}" href="#" th:onclick="'window.location.href=\'/products/category/add\''">Cancel</a>-->
-<!--                        </div>-->
-<!--                    </form>-->
                     <form th:action="@{/products/category}" th:object="${categoryDto}" method="post">
                         <input type="hidden" th:field="*{id}" />
 
