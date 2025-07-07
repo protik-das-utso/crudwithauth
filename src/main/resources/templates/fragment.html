@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--Header Fragment-->
+<div th:fragment="header" class="header">
+  <div class="container">
+    <h1 class="mt-5 text-center">Welcome to Best Store</h1>
+    <a class="btn btn-primary" href="/products" role="button">Products &raquo;</a>
+    <a class="btn btn-primary" href="/products/add" role="button">Add Products &raquo;</a>
+      <a sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" class="btn btn-primary" href="/products/category" role="button">Category &raquo;</a>
+      <a th:if="${!isLoggedIn}" class="btn btn-primary" href="/registration" role="button">Registration</a>
+      <a th:if="${!isLoggedIn}" class="btn btn-warning" href="/login" role="button">Login</a>
+      <a th:if="${isLoggedIn}" class="btn btn-danger" href="/logout" role="button">Logout</a>
+
+      <div class="container">
+          <div sec:authorize="isAuthenticated()">
+              <p>Logged in as: <span sec:authentication="name"></span></p>
+          </div>
+          <p>Your role(s):
+              <span sec:authorize="hasRole('ROLE_ADMIN')">ADMIN</span>
+              <span sec:authorize="hasRole('ROLE_ADMIN') and hasRole('ROLE_USER')">, </span>
+              <span sec:authorize="hasRole('ROLE_USER')">USER</span>
+          </p>
+
+      </div>
+  </div>
+</div>
+</body>
+</html>

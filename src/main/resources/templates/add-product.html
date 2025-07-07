@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Product</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="fragment :: header"></div>
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Add Products</h3>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/products/add}" th:object="${productDto}" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{name}" class="form-control">
+                        <p th:if="${#fields.hasErrors('name')}" th:errorclass="text-danger" th:errors="*{name}"></p>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Brand	</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{brand}" class="form-control">
+                        <p th:if="${#fields.hasErrors('brand')}" th:errorclass="text-danger" th:errors="*{brand}"></p>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Category</label>
+                    <div class="col-sm-8">
+                        <select th:field="*{category}" class="form-select">
+                            <option value="" selected>Select Category</option>
+                            <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
+                        </select>
+                        <p th:if="${#fields.hasErrors('category')}" th:errorclass="text-danger" th:errors="*{category}"></p>
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Price</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{price}" class="form-control">
+                        <p th:if="${#fields.hasErrors('price')}" th:errorclass="text-danger" th:errors="*{price}"></p>
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{description}" class="form-control">
+                        <p th:if="${#fields.hasErrors('description')}" th:errorclass="text-danger" th:errors="*{description}"></p>
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Image</label>
+                    <div class="col-sm-8">
+                        <input type="file" th:field="*{imageFile}" class="form-control">
+                        <p th:if="${#fields.hasErrors('imageFile')}" class="text-danger" th:errors="*{imageFile}"></p>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn btn-success">Add Product</button>
+                <a th:href="@{/products}" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

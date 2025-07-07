@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Category</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div th:insert="~{fragment::header}"></div>
+    <div class="container mt-5">
+        <div class="card shadow-sm d-flex flex-row justify-content-between p-3 gap-3">
+            <div class="flex-fill" sec:authorize="hasRole('ROLE_ADMIN')" style="min-width: 350px;">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Add Category</h3>
+                </div>
+                <div class="card-body">
+<!--                    <form th:action="@{/products/category/add}" th:object="${categoryDto}" method="post" enctype="multipart/form-data">-->
+<!--                        <div class="mb-3">-->
+<!--                            <label class="form-label">Category Name</label>-->
+<!--                            <div class="col-sm-12">-->
+<!--                                <input type="text" th:field="*{name}" class="form-control">-->
+<!--                                <p th:if="${#fields.hasErrors('name')}" th:errorclass="text-danger" th:errors="*{name}"></p>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <button type="submit" class="btn btn-success">Add Category</button>-->
+<!--                        <a th:href="@{/products}" class="btn btn-secondary ms-2">Cancel</a>-->
+<!--                    </form>-->
+<!--                    <form th:action="@{/products/category/edit/{id}(id=${categoryDto.id})}" th:object="${categoryDto}" method="post">-->
+<!--                        <div>-->
+<!--                            <label>Name:</label>-->
+<!--                            <input type="text" th:field="*{name}" placeholder="Category name" />-->
+<!--                        </div>-->
+
+<!--                        <div>-->
+<!--                            <button type="submit" th:text="${update} ? 'Update Category' : 'Add Category'"></button>-->
+<!--                            <a th:if="${update}" href="#" th:onclick="'window.location.href=\'/products/category/add\''">Cancel</a>-->
+<!--                        </div>-->
+<!--                    </form>-->
+                    <form th:action="@{/products/category}" th:object="${categoryDto}" method="post">
+                        <input type="hidden" th:field="*{id}" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Category Name</label>
+                            <div class="col-sm-12">
+                                <input type="text" th:field="*{name}" class="form-control" placeholder="Category name" />
+                                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></p>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success" th:text="${update} ? 'Update Category' : 'Add Category'">Add</button>
+
+                        <a th:if="${update}" th:href="@{/products/category}" class="btn btn-secondary ms-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+
+            <div class="flex-fill">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Available Category</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th sec:authorize="hasRole('ROLE_ADMIN')">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="category : ${categories}">
+                            <td th:text="${category.id}"></td>
+                            <td th:text="${category.name}"></td>
+                            <td sec:authorize="hasRole('ROLE_ADMIN')">
+                                <a th:href="@{/products/category/edit/{id}(id=${category.id})}" class="btn btn-primary">Edit</a>
+
+                                <form th:action="@{/products/category/delete/{id}(id=${category.id})}" method="post" style="display:inline;"
+                                      onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                </form>
+                            </td>
+
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
