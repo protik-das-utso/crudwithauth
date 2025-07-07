@@ -22,7 +22,7 @@
           </div>
           <p>Your role(s):
               <span sec:authorize="hasRole('ROLE_ADMIN')">ADMIN</span>
-              <span sec:authorize="hasRole('ROLE_ADMIN') and hasRole('ROLE_USER')">, </span>
+              <span sec:authorize="hasRole('ROLE_ADMIN') and hasRole('ROLE_USER')">,</span>
               <span sec:authorize="hasRole('ROLE_USER')">USER</span>
           </p>
 
